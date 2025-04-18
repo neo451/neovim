@@ -1514,7 +1514,7 @@ end
 ---
 --- When |gf| and related commands fails with the default first try,
 --- this will invoke the "textDocument/documentLink" LSP method to find
---- the link under the cursor, falls back to |cfile|
+--- the link under the cursor, falls back to `cfile`
 ---
 function lsp.includeexpr()
   return vim.ui._get_urls()[1]
