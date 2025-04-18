@@ -1099,9 +1099,9 @@ is_enabled({name})                                      *vim.lsp.is_enabled()*
 includeexpr()                                          *vim.lsp.includeexpr()*
     Provides an interface between the built-in client and 'includeexpr'.
 
-    When 'goto file' commands (e.g. |gf| |gF| |CTRL-W_CTRL-F|) fails with the
-    default first try, this will invoke the "textDocument/documentLink" LSP
-    method to find the link under the cursor.
+    When 'goto file' commands (e.g. |gf|) fails with the default first try,
+    this will invoke the "textDocument/documentLink" LSP method to find the
+    link under the cursor, falls back to |cfile|
 
 omnifunc({findstart}, {base})                             *vim.lsp.omnifunc()*
     Implements 'omnifunc' compatible LSP completion.
