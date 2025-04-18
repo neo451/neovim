@@ -842,6 +842,12 @@ function lsp._set_defaults(client, bufnr)
     vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
   end
   if
+    client:supports_method(ms.textDocument_documentLink)
+    and is_empty_or_default(bufnr, 'includeexpr')
+  then
+    vim.bo[bufnr].includeexpr = 'v:lua.vim.lsp.includeexpr()'
+  end
+  if
     client:supports_method(ms.textDocument_rangeFormatting)
     and is_empty_or_default(bufnr, 'formatprg')
     and is_empty_or_default(bufnr, 'formatexpr')
@@ -861,9 +867,6 @@ function lsp._set_defaults(client, bufnr)
   end)
   if client:supports_method(ms.textDocument_diagnostic) then
     lsp.diagnostic._enable(bufnr)
-  end
-  if client:supports_method(ms.textDocument_documentLink) then
-    vim.bo[bufnr].includeexpr = 'v:lua.vim.lsp.includeexpr()'
   end
 end
 
