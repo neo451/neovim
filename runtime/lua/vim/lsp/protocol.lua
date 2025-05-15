@@ -535,6 +535,10 @@ function protocol.make_client_capabilities()
       colorProvider = {
         dynamicRegistration = true,
       },
+      documentLink = {
+        dynamicRegistration = false,
+        tooltipSupport = false,
+      },
     },
     workspace = {
       symbol = {

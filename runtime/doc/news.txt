@@ -152,6 +152,8 @@ LSP
   https://microsoft.github.io/language-server-protocol/specification/#textDocument_documentColor
 • The `textDocument/diagnostic` request now includes the previous id in its
   parameters.
+• Support for `textDocument/documentLink`: |lsp-buf|
+    https://microsoft.github.io/language-server-protocol/specification/#textDocument_documentLink
 
 LUA
 
