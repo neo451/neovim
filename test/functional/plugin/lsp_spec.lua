@@ -5487,6 +5487,59 @@ describe('LSP', function()
     end)
   end)
 
+  describe('vim.lsp.includeexpr', function()
+    before_each(function()
+      ---@type lsp.documentLink[]
+      local mock_links = {
+        {
+          range = {
+            ['start'] = { line = 5, character = 23 },
+            ['end'] = { line = 10, character = 0 },
+          },
+          target = 'test://buf',
+        },
+        {
+          range = {
+            ['start'] = { line = 42, character = 10 },
+            ['end'] = { line = 44, character = 0 },
+          },
+          target = 'https://example.com',
+        },
+      }
+      exec_lua(create_server_definition)
+      exec_lua(function()
+        _G.mock_links = mock_links
+        _G.server = _G._create_server({
+          ---@type lsp.ServerCapabilities
+          capabilities = {
+            documentLinkProvider = {
+              dynamicRegistration = false,
+            },
+          },
+          handlers = {
+            ['textDocument/documentLink'] = function(_, _, callback)
+              callback(nil, { _G.mock_links[1] })
+            end,
+          },
+        })
+        _G.client_id = vim.lsp.start({ name = 'dummy', cmd = _G.server.cmd })
+      end)
+    end)
+
+    after_each(function()
+      exec_lua(function()
+        vim.lsp.stop_client(_G.client_id)
+      end)
+    end)
+
+    it('return the first matching link', function()
+      local result = exec_lua(function()
+        return vim.lsp.includeexpr()
+      end)
+      eq("", result)
+    end)
+  end)
+
   describe('cmd', function()
     it('connects to lsp server via rpc.connect using ip address', function()
       exec_lua(create_tcp_echo_server)

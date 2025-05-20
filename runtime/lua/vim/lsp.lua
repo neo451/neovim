@@ -6,6 +6,7 @@ local lsp = vim._defer_require('vim.lsp', {
   _folding_range = ..., --- @module 'vim.lsp._folding_range'
   _snippet_grammar = ..., --- @module 'vim.lsp._snippet_grammar'
   _tagfunc = ..., --- @module 'vim.lsp._tagfunc'
+  _includeexpr = ..., --- @module 'vim.lsp._includeexpr'
   _watchfiles = ..., --- @module 'vim.lsp._watchfiles'
   buf = ..., --- @module 'vim.lsp.buf'
   client = ..., --- @module 'vim.lsp.client'
@@ -1516,8 +1517,9 @@ end
 --- this will invoke the "textDocument/documentLink" LSP method to find
 --- the link under the cursor, falls back to `cfile`
 ---
+---@return string
 function lsp.includeexpr()
-  return vim.ui._get_urls()[1]
+  return vim.lsp._includeexpr()[1]
 end
 
 --- Provides an interface between the built-in client and a `foldexpr` function.
