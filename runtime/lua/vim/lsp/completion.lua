@@ -992,8 +992,10 @@ local function trigger(bufnr, clients, ctx)
       end
 
       local result = response.result
-      if result and #(result.items or result) > 0 then
+      if result then
         Context.isIncomplete = Context.isIncomplete or result.isIncomplete
+      end
+      if result and #(result.items or result) > 0 then
         local encoding = client and client.offset_encoding or 'utf-16'
         local client_matches, tmp_server_start_boundary
         client_matches, tmp_server_start_boundary = M._convert_results(
@@ -1084,6 +1086,21 @@ local function on_insert_char_pre(handle)
         trigger(api.nvim_get_current_buf(), matched_clients, {
           triggerKind = protocol.CompletionTriggerKind.TriggerCharacter,
           triggerCharacter = char,
+        })
+      end)
+    end)
+  elseif Context.isIncomplete then
+    -- Server returned isIncomplete but popup never showed (e.g. empty
+    -- result set after a trigger character). Re-request so the server
+    -- can provide results once enough context has been typed.
+    completion_timer = assert(vim.uv.new_timer())
+    completion_timer:start(25, 0, function()
+      reset_timer()
+      vim.schedule(function()
+        M.get({
+          ctx = {
+            triggerKind = protocol.CompletionTriggerKind.TriggerForIncompleteCompletions,
+          },
         })
       end)
     end)
